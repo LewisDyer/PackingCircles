@@ -3,7 +3,7 @@ from random import uniform, choice
 from math import pi, sqrt
 WIDTH = 10 # width in units
 HEIGHT = 10 # height in units
-PIXEL_SCALE = 20 # how many pixels per unit?
+PIXEL_SCALE = 100 # how many pixels per unit?
 
 surface = cairo.ImageSurface(cairo.FORMAT_RGB24, WIDTH*PIXEL_SCALE, HEIGHT*PIXEL_SCALE)
 
@@ -142,10 +142,5 @@ def check_collision(circle, circles, p):
 render_circle_layer(gradient_params)
 
 render_circle_layer(tint_params)
-"""
-circles = []
-for i in range(500):
-    draw_circle([(0, 0, 0, 0.5)], False)
-"""
 
 surface.write_to_png('outputs/circle_packing.png')
