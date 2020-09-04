@@ -1,9 +1,9 @@
 import cairo
-from random import uniform, choice
-from math import pi, sqrt
-WIDTH = 10 # width in units
-HEIGHT = 10 # height in units
-PIXEL_SCALE = 100 # how many pixels per unit?
+from random import uniform, choice, randint
+from math import pi, sqrt, sin, cos
+WIDTH = 54 # width in units
+HEIGHT = 54 # height in units
+PIXEL_SCALE = 20 # how many pixels per unit?
 
 surface = cairo.ImageSurface(cairo.FORMAT_RGB24, WIDTH*PIXEL_SCALE, HEIGHT*PIXEL_SCALE)
 
@@ -41,7 +41,7 @@ pride_params = {
 
 tint_params = {
     'min_radius': 0.05,
-    'max_radius': 2.8,
+    'max_radius': 15,
     'max_circles': 5000,
     'max_attempts': 50,
     'padding': 0.05,
@@ -50,15 +50,15 @@ tint_params = {
 
 gradient_params = {
     'min_radius': 0.05,
-    'max_radius': 2,
+    'max_radius': 15,
     'max_circles': 5000,
     'max_attempts': 50,
     'padding': 0.05,
-    'colours': [(212, 172, 13, 255), (169, 50, 38, 255), (36, 113, 163, 255), (19, 141, 117, 255)],
+    'colours': [(0, 0, 0, 255), (255, 255, 255, 255)],
     'inner_colours': [(0, 0, 0, 255)],
-    'inner_proportion': 0.9,
+    'inner_proportion': 0.65,
     'inner': False,
-    'clip_walls': False,
+    'clip_walls': True,
     'is_gradient': True
 }
 
@@ -88,15 +88,29 @@ def draw_circle(p, circles):
     if not place_to_draw:
         return
 
-    while(circle.radius < p['max_radius']):
-        circle.radius += 0.01
-        if check_collision(circle, circles,p):
-            circle.radius -= 0.01
-            break
+
+    new_radius = p['max_radius']
+    for other_circle in circles:
+        dx = circle.x - other_circle.x
+        dy = circle.y - other_circle.y
+        distance = sqrt(dx*dx + dy*dy) - other_circle.radius - p['padding']
+
+        if distance < new_radius:
+            new_radius = distance
+    
+    circle.radius = new_radius
 
     circles.append(circle)
     if circle.radius >= p.get('threshold_radius', 0):
-        ctx.move_to(circle.x+circle.radius, circle.y)
+        
+        '''
+        angle = randint(0, 359) * pi / 180
+        ctx.move_to(circle.x+(-1 * cos(angle) * circle.radius), circle.y + (sin(angle) * circle.radius))
+        for i in range(3):
+            angle += (pi / 2)
+            ctx.line_to(circle.x+(-1 * cos(angle) * circle.radius), circle.y + (sin(angle) * circle.radius))
+        ctx.close_path()
+        '''
         ctx.arc(circle.x, circle.y, circle.radius, 0, 2*pi)
 
 
@@ -115,7 +129,7 @@ def draw_circle(p, circles):
     ctx.fill()
 
     if p.get('inner', False):
-        ctx.move_to(circle.x+0.6*circle.radius, circle.y)
+        ctx.move_to(circle.x+p['inner_proportion']*circle.radius, circle.y)
         ctx.arc(circle.x, circle.y, p['inner_proportion']*circle.radius, 0, 2*pi)
         tint = choice(p['inner_colours'])
         ctx.set_source_rgba(tint[0]/255, tint[1]/255, tint[2]/255, tint[3]/255)
@@ -141,6 +155,6 @@ def check_collision(circle, circles, p):
 
 render_circle_layer(gradient_params)
 
-render_circle_layer(tint_params)
+#render_circle_layer(tint_params)
 
 surface.write_to_png('outputs/circle_packing.png')
