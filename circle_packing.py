@@ -17,53 +17,6 @@ ctx.rectangle(0, 0, WIDTH, HEIGHT)
 ctx.set_source_rgb(0, 0, 0)
 ctx.fill()
 
-base_params = {
-    'min_radius': 10,
-    'max_radius': 400,
-    'max_circles': 5000,
-    'max_attempts': 50,
-    'padding': 0.05,
-    'colours': [(212, 172, 13, 255), (169, 50, 38, 255), (36, 113, 163, 255), (19, 141, 117, 255)],
-    'inner_colours': [(0, 0, 0, 255)],
-    'inner_proportion': 0.9,
-    'inner': False,
-    'clip_walls': False
-}
-
-pride_params = {
-    'min_radius': 0.05,
-    'max_radius': 2.8,
-    'max_circles': 5000,
-    'max_attempts': 50,
-    'padding': 0.05,
-    'colours': [(228, 3, 3, 255), (255, 140, 0, 255), (255, 237, 0, 255), (0, 128, 38, 255), (0, 77, 255, 255), (117, 7, 135, 255)],
-    'inner_colours': [(228, 3, 3, 255), (255, 140, 0, 255), (255, 237, 0, 255), (0, 128, 38, 255), (0, 77, 255, 255), (117, 7, 135, 255)],
-    'inner': True,
-}
-
-tint_params = {
-    'min_radius': 10,
-    'max_radius': 300,
-    'max_circles': 5000,
-    'max_attempts': 50,
-    'padding': 0.05,
-    'colours': [(0, 0, 0, 0.25)]
-}
-
-gradient_params = {
-    'min_radius': 0.05,
-    'max_radius': 15,
-    'max_circles': 5000,
-    'max_attempts': 50,
-    'padding': 0.05,
-    'colours': [(0, 0, 0, 255), (255, 255, 255, 255)],
-    'inner_colours': [(0, 0, 0, 255)],
-    'inner_proportion': 0.65,
-    'inner': False,
-    'clip_walls': False,
-    'is_gradient': True
-}
-
 def render_circle_layer(layer):
     circles = []
     for i in range(layer.max_circles):
