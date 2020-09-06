@@ -2,39 +2,40 @@ import cairo
 from random import uniform, choice, randint
 from math import pi, sqrt, sin, cos
 
-from handle_params import Layer
-WIDTH = 1920 # width in units
-HEIGHT = 1080 # height in units
-PIXEL_SCALE = 1 # how many pixels per unit?
+from handle_params import Layer, Background
 
-surface = cairo.ImageSurface(cairo.FORMAT_RGB24, WIDTH*PIXEL_SCALE, HEIGHT*PIXEL_SCALE)
+def render_background(bg):
+    surface = cairo.ImageSurface(cairo.FORMAT_RGB24, bg.width, bg.height)
 
-ctx = cairo.Context(surface)
-ctx.scale(PIXEL_SCALE, PIXEL_SCALE)
+    ctx = cairo.Context(surface)
+    ctx.scale(1, 1)
 
-# background
-ctx.rectangle(0, 0, WIDTH, HEIGHT)
-ctx.set_source_rgb(0, 0, 0)
-ctx.fill()
+    # background
+    ctx.rectangle(0, 0, bg.width, bg.height)
+    bg_col = bg.colour.colour
+    ctx.set_source_rgb(bg_col[0], bg_col[1], bg_col[2])
+    ctx.fill()
 
-def render_circle_layer(layer):
+    return(ctx, surface)
+
+def render_circle_layer(bg, layer, ctx):
     circles = []
     for i in range(layer.max_circles):
-        draw_circle(layer, circles)
+        draw_circle(bg, layer, circles, ctx)
 
 class Circle:
-    def __init__(self, min_radius, colours):
-        self.x = uniform(0, WIDTH)
-        self.y = uniform(0, HEIGHT)
+    def __init__(self, bg, min_radius, colours):
+        self.x = uniform(0, bg.width)
+        self.y = uniform(0, bg.height)
         self.radius = min_radius
         chosen_colour = choice(colours)
         self.r, self.g, self.b = chosen_colour.colour
         self.a = chosen_colour.opacity
 
-def draw_circle(layer, circles):
+def draw_circle(bg, layer, circles, ctx):
     place_to_draw = False
     for i in range(layer.max_attempts):
-        circle = Circle(layer.min_radius, layer.colours)
+        circle = Circle(bg, layer.min_radius, layer.colours)
 
         if check_collision(circle, circles, layer):
             continue
@@ -100,7 +101,11 @@ def check_collision(circle, circles, layer):
     return False
 
 if __name__ == '__main__':
-    render_circle_layer(Layer('base'))
-    render_circle_layer(Layer('tint'))
+
+    bg = Background('big_black')
+    ctx, surface = render_background(bg)
+
+    render_circle_layer(bg, Layer('base'), ctx)
+    render_circle_layer(bg, Layer('tint'), ctx)
 
     surface.write_to_png('outputs/circle_packing_test.png')

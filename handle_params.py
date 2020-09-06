@@ -52,6 +52,16 @@ class Layer:
         # if is_gradient is true, circles are filled in using two randomly chosen colours with a gradient between them. (does not impact inner colours)
         self.is_gradient = data.get('is_gradient', 'False').lower() == 'true'
 
+class Background:
+    def __init__(self, json_name):
+        with open(f'bgs/{json_name}.json', 'r') as source:
+            data = load(source)
+        
+        self.width = data.get('width', 500)
+        self.height = data.get('height', 500)
+
+        self.colour = Colour(data.get('colour', {"colour": "#000000"}))
+
 
 
 
