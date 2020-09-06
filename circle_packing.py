@@ -3,6 +3,7 @@ from random import uniform, choice, randint
 from math import pi, sqrt, sin, cos
 
 from handle_params import Layer, Background
+from shapes import shape_list
 
 def render_background(bg):
     surface = cairo.ImageSurface(cairo.FORMAT_RGB24, bg.width, bg.height)
@@ -59,7 +60,12 @@ def draw_circle(bg, layer, circles, ctx):
     circle.radius = new_radius
 
     circles.append(circle)
-    ctx.arc(circle.x, circle.y, circle.radius, 0, 2*pi)
+
+    draw_function = shape_list[layer.shape]['function']
+
+    draw_function(circle, ctx, *layer.args)
+    
+    #ctx.arc(circle.x, circle.y, circle.radius, 0, 2*pi)
 
 
     if layer.is_gradient and len(layer.colours) > 1:

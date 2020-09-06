@@ -14,5 +14,7 @@
     "inner_proportion": 0.9,
     "inner": "False",
     "is_gradient": "True",
-    "clip_walls": "False"
+    "clip_walls": "False",
+    "shape": "polygon",
+    "sides": 3
 }
