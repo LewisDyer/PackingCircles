@@ -45,7 +45,7 @@ tint_params = {
     'max_circles': 5000,
     'max_attempts': 50,
     'padding': 0.05,
-    'colours': [(0, 0, 0, 255*0.25)]
+    'colours': [(0, 0, 0, 0.25)]
 }
 
 gradient_params = {
@@ -121,18 +121,18 @@ def draw_circle(p, circles):
             ec = choice(p['colours'])
 
         pattern = cairo.LinearGradient(circle.x, circle.y - circle.radius, circle.x, circle.y + circle.radius)
-        pattern.add_color_stop_rgba(0, sc[0]/255, sc[1]/255, sc[2]/255, sc[3]/255)
-        pattern.add_color_stop_rgba(1, ec[0]/255, ec[1]/255, ec[2]/255, ec[3]/255)
+        pattern.add_color_stop_rgba(0, sc[0]/255, sc[1]/255, sc[2]/255, sc[3])
+        pattern.add_color_stop_rgba(1, ec[0]/255, ec[1]/255, ec[2]/255, ec[3])
         ctx.set_source(pattern)
     else:
-        ctx.set_source_rgba(circle.r/255, circle.g/255, circle.b/255, circle.a/255)
+        ctx.set_source_rgba(circle.r/255, circle.g/255, circle.b/255, circle.a)
     ctx.fill()
 
     if p.get('inner', False):
         ctx.move_to(circle.x+p['inner_proportion']*circle.radius, circle.y)
         ctx.arc(circle.x, circle.y, p['inner_proportion']*circle.radius, 0, 2*pi)
         tint = choice(p['inner_colours'])
-        ctx.set_source_rgba(tint[0]/255, tint[1]/255, tint[2]/255, tint[3]/255)
+        ctx.set_source_rgba(tint[0]/255, tint[1]/255, tint[2]/255, tint[3])
         ctx.fill() 
 
 def check_collision(circle, circles, p):
@@ -155,6 +155,6 @@ def check_collision(circle, circles, p):
 
 render_circle_layer(gradient_params)
 
-#render_circle_layer(tint_params)
+render_circle_layer(tint_params)
 
 surface.write_to_png('outputs/circle_packing.png')
