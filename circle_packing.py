@@ -1,6 +1,8 @@
 import cairo
 from random import uniform, choice, randint
 from math import pi, sqrt, sin, cos
+
+from handle_params import Layer
 WIDTH = 1920 # width in units
 HEIGHT = 1080 # height in units
 PIXEL_SCALE = 1 # how many pixels per unit?
@@ -62,24 +64,26 @@ gradient_params = {
     'is_gradient': True
 }
 
-def render_circle_layer(p):
+def render_circle_layer(layer):
     circles = []
-    for i in range(p['max_circles']):
-        draw_circle(p, circles)
+    for i in range(layer.max_circles):
+        draw_circle(layer, circles)
 
 class Circle:
     def __init__(self, min_radius, colours):
         self.x = uniform(0, WIDTH)
         self.y = uniform(0, HEIGHT)
         self.radius = min_radius
-        self.r, self.g, self.b, self.a = choice(colours)
+        chosen_colour = choice(colours)
+        self.r, self.g, self.b = chosen_colour.colour
+        self.a = chosen_colour.opacity
 
-def draw_circle(p, circles):
+def draw_circle(layer, circles):
     place_to_draw = False
-    for i in range(p['max_attempts']):
-        circle = Circle(p['min_radius'], p['colours'])
+    for i in range(layer.max_attempts):
+        circle = Circle(layer.min_radius, layer.colours)
 
-        if check_collision(circle, circles, p):
+        if check_collision(circle, circles, layer):
             continue
         else:
             place_to_draw = True
@@ -89,11 +93,11 @@ def draw_circle(p, circles):
         return
 
 
-    new_radius = p['max_radius']
+    new_radius = layer.max_radius
     for other_circle in circles:
         dx = circle.x - other_circle.x
         dy = circle.y - other_circle.y
-        distance = sqrt(dx*dx + dy*dy) - other_circle.radius - p['padding']
+        distance = sqrt(dx*dx + dy*dy) - other_circle.radius - layer.padding
 
         if distance < new_radius:
             new_radius = distance
@@ -101,24 +105,14 @@ def draw_circle(p, circles):
     circle.radius = new_radius
 
     circles.append(circle)
-    if circle.radius >= p.get('threshold_radius', 0):
-        
-        '''
-        angle = randint(0, 359) * pi / 180
-        ctx.move_to(circle.x+(-1 * cos(angle) * circle.radius), circle.y + (sin(angle) * circle.radius))
-        for i in range(3):
-            angle += (pi / 2)
-            ctx.line_to(circle.x+(-1 * cos(angle) * circle.radius), circle.y + (sin(angle) * circle.radius))
-        ctx.close_path()
-        '''
-        ctx.arc(circle.x, circle.y, circle.radius, 0, 2*pi)
+    ctx.arc(circle.x, circle.y, circle.radius, 0, 2*pi)
 
 
-    if p.get('is_gradient', False) and len(p['colours']) > 1:
-        sc = choice(p['colours'])
-        ec = choice(p['colours'])
+    if layer.is_gradient and len(layer.colours) > 1:
+        sc = choice(layer.colours)
+        ec = choice(layer.colours)
         while sc == ec:
-            ec = choice(p['colours'])
+            ec = choice(layer.colours) # enforce two different colours
 
         pattern = cairo.LinearGradient(circle.x, circle.y - circle.radius, circle.x, circle.y + circle.radius)
         pattern.add_color_stop_rgba(0, sc[0]/255, sc[1]/255, sc[2]/255, sc[3])
@@ -128,22 +122,22 @@ def draw_circle(p, circles):
         ctx.set_source_rgba(circle.r/255, circle.g/255, circle.b/255, circle.a)
     ctx.fill()
 
-    if p.get('inner', False):
-        ctx.move_to(circle.x+p['inner_proportion']*circle.radius, circle.y)
-        ctx.arc(circle.x, circle.y, p['inner_proportion']*circle.radius, 0, 2*pi)
-        tint = choice(p['inner_colours'])
+    if layer.inner:
+        ctx.move_to(circle.x+layer.inner_proportion*circle.radius, circle.y)
+        ctx.arc(circle.x, circle.y, layer.inner_proportion*circle.radius, 0, 2*pi)
+        tint = choice(layer.inner_colours)
         ctx.set_source_rgba(tint[0]/255, tint[1]/255, tint[2]/255, tint[3])
         ctx.fill() 
 
-def check_collision(circle, circles, p):
+def check_collision(circle, circles, layer):
     for other_circle in circles:
-        max_dist = circle.radius + other_circle.radius + p['padding']
+        max_dist = circle.radius + other_circle.radius + layer.padding
         dx = circle.x - other_circle.x
         dy = circle.y - other_circle.y
 
         if max_dist >= sqrt(dx*dx + dy*dy):
             return True
-    if p.get('clip_walls', False):
+    if layer.clip_walls:
         if (circle.x + circle.radius >= WIDTH) or (circle.x - circle.radius <= 0):
             return True
         
@@ -153,8 +147,10 @@ def check_collision(circle, circles, p):
     return False
 
 
-render_circle_layer(base_params)
+#render_circle_layer(base_params)
 
-render_circle_layer(tint_params)
+#render_circle_layer(tint_params)
+
+render_circle_layer(Layer('base'))
 
 surface.write_to_png('outputs/circle_packing_test.png')
