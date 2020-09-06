@@ -11,10 +11,11 @@
         {"colour": "#138D75"}
     ],
     "inner_colours": {"colour": "#000000"},
-    "inner_proportion": 0.9,
-    "inner": "False",
+    "inner_proportion": 0.65,
+    "inner": "True",
+    "inner_hole": "True",
     "is_gradient": "True",
     "clip_walls": "False",
     "shape": "polygon",
-    "sides": 3
+    "sides": 5
 }

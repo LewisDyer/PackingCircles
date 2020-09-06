@@ -38,6 +38,10 @@ class Layer:
 
         self.inner = data.get('inner', 'False').lower() == 'true'
 
+        # if this is true, the inner section will be the same as the background colour
+
+        self.inner_hole = data.get('inner_hole', 'False').lower() == 'true'
+
         # specifies the list of possible colours for the inside of each circle
         inner_list = data.get('inner_colours', {"colour": "#FFFFFF"})
         self.inner_colours = []
@@ -57,8 +61,6 @@ class Layer:
 
         additional_args = shape_list[self.shape].get('args', [])
         self.args = [data[arg] for arg in additional_args]
-
-        print(self.args)
 
 class Background:
     def __init__(self, json_name):

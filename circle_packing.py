@@ -84,9 +84,14 @@ def draw_circle(bg, layer, circles, ctx):
 
     if layer.inner:
         ctx.move_to(circle.x+layer.inner_proportion*circle.radius, circle.y)
-        ctx.arc(circle.x, circle.y, layer.inner_proportion*circle.radius, 0, 2*pi)
+        old_radius = circle.radius
+        circle.radius *= layer.inner_proportion
+        draw_function(circle, ctx, *layer.args)
+        circle.radius = old_radius
         tint = choice(layer.inner_colours)
-        ctx.set_source_rgba(tint[0]/255, tint[1]/255, tint[2]/255, tint[3])
+        if layer.inner_hole:
+            tint = bg.colour
+        ctx.set_source_rgba(tint.colour[0]/255, tint.colour[1]/255, tint.colour[2]/255, tint.opacity)
         ctx.fill() 
 
 def check_collision(circle, circles, layer):
@@ -114,4 +119,4 @@ if __name__ == '__main__':
     render_circle_layer(bg, Layer('base'), ctx)
     render_circle_layer(bg, Layer('tint'), ctx)
 
-    surface.write_to_png('outputs/circle_packing_test.png')
+    surface.write_to_png('outputs/extra_shapes_test.png')
