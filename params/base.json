@@ -13,5 +13,6 @@
     "inner_colours": {"colour": "#000000"},
     "inner_proportion": 0.9,
     "inner": "False",
+    "is_gradient": "True",
     "clip_walls": "False"
 }

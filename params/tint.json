@@ -1,9 +1,9 @@
 {
-    "min_radius": 10,
+    "min_radius": 5,
     "max_radius": 300,
     "max_circles": 5000,
     "max_attempts": 50,
-    "padding": 0.05,
+    "padding": 1,
     "colours": [
         {"colour": "#000000",
         "opacity": 0.25}

@@ -68,8 +68,8 @@ def draw_circle(layer, circles):
             ec = choice(layer.colours) # enforce two different colours
 
         pattern = cairo.LinearGradient(circle.x, circle.y - circle.radius, circle.x, circle.y + circle.radius)
-        pattern.add_color_stop_rgba(0, sc[0]/255, sc[1]/255, sc[2]/255, sc[3])
-        pattern.add_color_stop_rgba(1, ec[0]/255, ec[1]/255, ec[2]/255, ec[3])
+        pattern.add_color_stop_rgba(0, sc.colour[0]/255, sc.colour[1]/255, sc.colour[2]/255, sc.opacity)
+        pattern.add_color_stop_rgba(1, ec.colour[0]/255, ec.colour[1]/255, ec.colour[2]/255, ec.opacity)
         ctx.set_source(pattern)
     else:
         ctx.set_source_rgba(circle.r/255, circle.g/255, circle.b/255, circle.a)
@@ -99,11 +99,8 @@ def check_collision(circle, circles, layer):
 
     return False
 
+if __name__ == '__main__':
+    render_circle_layer(Layer('base'))
+    render_circle_layer(Layer('tint'))
 
-#render_circle_layer(base_params)
-
-#render_circle_layer(tint_params)
-
-render_circle_layer(Layer('base'))
-
-surface.write_to_png('outputs/circle_packing_test.png')
+    surface.write_to_png('outputs/circle_packing_test.png')
