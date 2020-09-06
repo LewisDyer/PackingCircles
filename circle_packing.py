@@ -1,9 +1,9 @@
 import cairo
 from random import uniform, choice, randint
 from math import pi, sqrt, sin, cos
-WIDTH = 54 # width in units
-HEIGHT = 54 # height in units
-PIXEL_SCALE = 20 # how many pixels per unit?
+WIDTH = 1920 # width in units
+HEIGHT = 1080 # height in units
+PIXEL_SCALE = 1 # how many pixels per unit?
 
 surface = cairo.ImageSurface(cairo.FORMAT_RGB24, WIDTH*PIXEL_SCALE, HEIGHT*PIXEL_SCALE)
 
@@ -16,8 +16,8 @@ ctx.set_source_rgb(0, 0, 0)
 ctx.fill()
 
 base_params = {
-    'min_radius': 0.05,
-    'max_radius': 2,
+    'min_radius': 10,
+    'max_radius': 400,
     'max_circles': 5000,
     'max_attempts': 50,
     'padding': 0.05,
@@ -40,8 +40,8 @@ pride_params = {
 }
 
 tint_params = {
-    'min_radius': 0.05,
-    'max_radius': 15,
+    'min_radius': 10,
+    'max_radius': 300,
     'max_circles': 5000,
     'max_attempts': 50,
     'padding': 0.05,
@@ -58,7 +58,7 @@ gradient_params = {
     'inner_colours': [(0, 0, 0, 255)],
     'inner_proportion': 0.65,
     'inner': False,
-    'clip_walls': True,
+    'clip_walls': False,
     'is_gradient': True
 }
 
@@ -153,8 +153,8 @@ def check_collision(circle, circles, p):
     return False
 
 
-render_circle_layer(gradient_params)
+render_circle_layer(base_params)
 
 render_circle_layer(tint_params)
 
-surface.write_to_png('outputs/circle_packing.png')
+surface.write_to_png('outputs/circle_packing_test.png')

@@ -1,4 +1,5 @@
 from json import load
+from pprint import pprint
 '''
 This file contains multiple methods for handling layer parameters. In particular, layers are defined in json files,
 which are then converted into Layer objects, which are passed to rendering methods
@@ -9,9 +10,6 @@ class Colour:
         colour_code = colour_dict['colour'].lstrip('#')
         self.colour = tuple(int(colour_code[i:i+2], 16) for i in (0, 2, 4)) # convert to RGB tuple
         self.opacity = colour_dict.get('opacity', 1)
-
-
-
 
 class Layer:
     def __init__(self, json_name):
@@ -33,7 +31,7 @@ class Layer:
         colour_list = data.get('colours', {"colour": "#FFFFFF"})
         self.colours = []
         for colour_dict in colour_list:
-            colour_list.append(Colour(colour_dict))
+            self.colours.append(Colour(colour_dict))
 
         # if this parameter is true, an inner section of the circle will also be coloured, as defined by inner_colours and inner_proportion
 
@@ -43,17 +41,16 @@ class Layer:
         inner_list = data.get('inner_colours', {"colour": "#FFFFFF"})
         self.inner_colours = []
         for colour_dict in colour_list:
-            inner_colours.append(Colour(colour_dict))
+            self.inner_colours.append(Colour(colour_dict))
 
         # determines how much of the inner section of the circle is filled in (based on the circle's *radius*, not area)
         self.inner_proportion = data.get('inner_proportion', 0.5)
 
         # if clip_walls is true, circles must fit entirely inside the boundaries of the image
-        self.clip_walls = data.get('clip_walls').lower() == 'true'
+        self.clip_walls = data.get('clip_walls', 'False').lower() == 'true'
 
         # if is_gradient is true, circles are filled in using two randomly chosen colours with a gradient between them. (does not impact inner colours)
-        self.is_gradient = data.get('is_gradient').lower() == 'true'
-
+        self.is_gradient = data.get('is_gradient', 'False').lower() == 'true'
 
 
 
