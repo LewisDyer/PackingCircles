@@ -1,7 +1,7 @@
 {
     "min_radius": 5,
     "max_radius": 500,
-    "max_circles": 5000,
+    "max_shapes": 5000,
     "max_attempts": 50,
     "padding": 2,
     "colours": [

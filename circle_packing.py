@@ -19,12 +19,12 @@ def render_background(bg):
 
     return(ctx, surface)
 
-def render_circle_layer(bg, layer, ctx):
-    circles = []
-    for i in range(layer.max_circles):
-        draw_circle(bg, layer, circles, ctx)
+def render_shape_layer(bg, layer, ctx):
+    shapes = []
+    for i in range(layer.max_shapes):
+        draw_shape(bg, layer, shapes, ctx)
 
-class Circle:
+class Shape:
     def __init__(self, bg, min_radius, colours):
         self.x = uniform(0, bg.width)
         self.y = uniform(0, bg.height)
@@ -33,12 +33,12 @@ class Circle:
         self.r, self.g, self.b = chosen_colour.colour
         self.a = chosen_colour.opacity
 
-def draw_circle(bg, layer, circles, ctx):
+def draw_shape(bg, layer, shapes, ctx):
     place_to_draw = False
     for i in range(layer.max_attempts):
-        circle = Circle(bg, layer.min_radius, layer.colours)
+        shape = Shape(bg, layer.min_radius, layer.colours)
 
-        if check_collision(circle, circles, layer):
+        if check_collision(shape, shapes, layer):
             continue
         else:
             place_to_draw = True
@@ -49,23 +49,23 @@ def draw_circle(bg, layer, circles, ctx):
 
 
     new_radius = layer.max_radius
-    for other_circle in circles:
-        dx = circle.x - other_circle.x
-        dy = circle.y - other_circle.y
-        distance = sqrt(dx*dx + dy*dy) - other_circle.radius - layer.padding
+    for other_shape in shapes:
+        dx = shape.x - other_shape.x
+        dy = shape.y - other_shape.y
+        distance = sqrt(dx*dx + dy*dy) - other_shape.radius - layer.padding
 
         if distance < new_radius:
             new_radius = distance
     
-    circle.radius = new_radius
+    shape.radius = new_radius
 
-    circles.append(circle)
+    shapes.append(shape)
 
     draw_function = shape_list[layer.shape]['function']
 
-    draw_function(circle, ctx, *layer.args)
+    draw_function(shape, ctx, *layer.args)
     
-    #ctx.arc(circle.x, circle.y, circle.radius, 0, 2*pi)
+    #ctx.arc(shape.x, shape.y, shape.radius, 0, 2*pi)
 
 
     if layer.is_gradient and len(layer.colours) > 1:
@@ -74,39 +74,39 @@ def draw_circle(bg, layer, circles, ctx):
         while sc == ec:
             ec = choice(layer.colours) # enforce two different colours
 
-        pattern = cairo.LinearGradient(circle.x, circle.y - circle.radius, circle.x, circle.y + circle.radius)
+        pattern = cairo.LinearGradient(shape.x, shape.y - shape.radius, shape.x, shape.y + shape.radius)
         pattern.add_color_stop_rgba(0, sc.colour[0]/255, sc.colour[1]/255, sc.colour[2]/255, sc.opacity)
         pattern.add_color_stop_rgba(1, ec.colour[0]/255, ec.colour[1]/255, ec.colour[2]/255, ec.opacity)
         ctx.set_source(pattern)
     else:
-        ctx.set_source_rgba(circle.r/255, circle.g/255, circle.b/255, circle.a)
+        ctx.set_source_rgba(shape.r/255, shape.g/255, shape.b/255, shape.a)
     ctx.fill()
 
     if layer.inner:
-        ctx.move_to(circle.x+layer.inner_proportion*circle.radius, circle.y)
-        old_radius = circle.radius
-        circle.radius *= layer.inner_proportion
-        draw_function(circle, ctx, *layer.args)
-        circle.radius = old_radius
+        ctx.move_to(shape.x+layer.inner_proportion*shape.radius, shape.y)
+        old_radius = shape.radius
+        shape.radius *= layer.inner_proportion
+        draw_function(shape, ctx, *layer.args)
+        shape.radius = old_radius
         tint = choice(layer.inner_colours)
         if layer.inner_hole:
             tint = bg.colour
         ctx.set_source_rgba(tint.colour[0]/255, tint.colour[1]/255, tint.colour[2]/255, tint.opacity)
         ctx.fill() 
 
-def check_collision(circle, circles, layer):
-    for other_circle in circles:
-        max_dist = circle.radius + other_circle.radius + layer.padding
-        dx = circle.x - other_circle.x
-        dy = circle.y - other_circle.y
+def check_collision(shape, shapes, layer):
+    for other_shape in shapes:
+        max_dist = shape.radius + other_shape.radius + layer.padding
+        dx = shape.x - other_shape.x
+        dy = shape.y - other_shape.y
 
         if max_dist >= sqrt(dx*dx + dy*dy):
             return True
     if layer.clip_walls:
-        if (circle.x + circle.radius >= WIDTH) or (circle.x - circle.radius <= 0):
+        if (shape.x + shape.radius >= WIDTH) or (shape.x - shape.radius <= 0):
             return True
         
-        if (circle.y + circle.radius >= HEIGHT) or (circle.y - circle.radius <= 0):
+        if (shape.y + shape.radius >= HEIGHT) or (shape.y - shape.radius <= 0):
             return True
 
     return False
@@ -116,7 +116,7 @@ if __name__ == '__main__':
     bg = Background('big_black')
     ctx, surface = render_background(bg)
 
-    render_circle_layer(bg, Layer('base'), ctx)
-    render_circle_layer(bg, Layer('tint'), ctx)
+    render_shape_layer(bg, Layer('base'), ctx)
+    render_shape_layer(bg, Layer('tint'), ctx)
 
-    surface.write_to_png('outputs/extra_shapes_test.png')
+    surface.write_to_png('outputs/stream_background.png')
