@@ -17,7 +17,7 @@ def cross(shape, ctx, lines):
     # defines a cross with the given number of rectangles, equally spaced.
     start_angle = randint(0, 359)
     for i in range(lines):
-        angle_shift = 7.5 # how many degrees on either side?
+        angle_shift = 10 # how many degrees on either side?
         p1 = get_circle_point(shape, start_angle - angle_shift)
         p2 = get_circle_point(shape, start_angle + angle_shift)
         p3 = get_circle_point(shape, start_angle - angle_shift + 180)

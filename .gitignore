@@ -1,3 +1,4 @@
 *.png
+*.json
 __pycache__/handle_params.cpython-37.pyc
 __pycache__/shapes.cpython-37.pyc
