@@ -29,6 +29,7 @@ class Shape:
         self.x = uniform(0, bg.width)
         self.y = uniform(0, bg.height)
         self.radius = min_radius
+        self.angle = randint(0, 359)
         chosen_colour = choice(colours)
         self.r, self.g, self.b = chosen_colour.colour
         self.a = chosen_colour.opacity
@@ -117,6 +118,6 @@ if __name__ == '__main__':
     ctx, surface = render_background(bg)
 
     render_shape_layer(bg, Layer('stream'), ctx)
-    render_shape_layer(bg, Layer('tint'), ctx)
+    render_shape_layer(bg, Layer('stream_tint'), ctx)
 
-    surface.write_to_png('outputs/stream_background.png')
+    surface.write_to_png('outputs/stream_background_new.png')

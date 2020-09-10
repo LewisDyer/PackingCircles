@@ -15,7 +15,7 @@ def circle(shape, ctx):
 
 def cross(shape, ctx, lines):
     # defines a cross with the given number of rectangles, equally spaced.
-    start_angle = randint(0, 359)
+    start_angle = shape.angle
     for i in range(lines):
         angle_shift = 10 # how many degrees on either side?
         p1 = get_circle_point(shape, start_angle - angle_shift)
@@ -32,7 +32,7 @@ def cross(shape, ctx, lines):
         start_angle = (start_angle + (180/lines)) % 360
 
 def polygon(shape, ctx, sides):
-    start_angle = randint(0, 359)
+    start_angle = shape.angle
     ctx.move_to(shape.x + (shape.radius * cos(start_angle * pi / 180)), shape.y + (shape.radius * sin(start_angle * pi / 180)))
     for i in range(sides - 1):
         start_angle = (start_angle + (360/sides)) % 360
