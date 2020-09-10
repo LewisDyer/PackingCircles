@@ -57,10 +57,7 @@ class Layer:
         # if is_gradient is true, shapes are filled in using two randomly chosen colours with a gradient between them. (does not impact inner colours)
         self.is_gradient = data.get('is_gradient', 'False').lower() == 'true'
 
-        self.shape = data.get('shape', 'circle')
-
-        additional_args = shape_list[self.shape].get('args', [])
-        self.args = [data[arg] for arg in additional_args]
+        self.shapes = data.get('shapes', [{"name": "circle"}])
 
 class Background:
     def __init__(self, json_name):

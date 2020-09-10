@@ -46,11 +46,16 @@ class Shape:
         self.r, self.g, self.b = chosen_colour.colour
         self.a = chosen_colour.opacity
 
-        gradient_colour = choice(colours)
-        while chosen_colour == gradient_colour and len(colours) > 1:
-            gradient_colour = choice(colours)
+        gradient_colour = choice(layer.colours)
+        while chosen_colour == gradient_colour and len(layer.colours) > 1:
+            gradient_colour = choice(layer.colours)
         self.gr, self.gg, self.gb = gradient_colour.colour
         self.ga = gradient_colour.opacity
+
+        self.shape = choice(layer.shapes)
+
+        additional_args = shape_list[self.shape['name']].get('args', [])
+        self.args = [self.shape[arg] for arg in additional_args]
 
 
 def create_shape(bg, layer, shapes, ctx):
@@ -81,9 +86,9 @@ def create_shape(bg, layer, shapes, ctx):
     return(shape)
 
 def draw_shape(bg, layer, shape, ctx):
-    draw_function = shape_list[layer.shape]['function']
+    draw_function = shape_list[shape.shape['name']]['function']
 
-    draw_function(shape, ctx, *layer.args)
+    draw_function(shape, ctx, *shape.args)
     
     #ctx.arc(shape.x, shape.y, shape.radius, 0, 2*pi)
 
