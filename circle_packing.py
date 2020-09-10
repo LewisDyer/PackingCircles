@@ -20,9 +20,20 @@ def render_background(bg):
     return(ctx, surface)
 
 def render_shape_layer(bg, layer, ctx):
+    shapes = define_layer(bg, layer, ctx)
+    draw_layer(bg, layer, shapes, ctx)
+
+def define_layer(bg, layer, ctx):
     shapes = []
     for i in range(layer.max_shapes):
-        draw_shape(bg, layer, shapes, ctx)
+        new_shape = create_shape(bg, layer, shapes, ctx)
+        if new_shape:
+            shapes.append(new_shape)
+    return(shapes)
+
+def draw_layer(bg, layer, shapes, ctx):
+    for shape in shapes:
+        draw_shape(bg, layer, shape, ctx)
 
 class Shape:
     def __init__(self, bg, min_radius, colours):
@@ -34,11 +45,10 @@ class Shape:
         self.r, self.g, self.b = chosen_colour.colour
         self.a = chosen_colour.opacity
 
-def draw_shape(bg, layer, shapes, ctx):
+def create_shape(bg, layer, shapes, ctx):
     place_to_draw = False
     for i in range(layer.max_attempts):
         shape = Shape(bg, layer.min_radius, layer.colours)
-
         if check_collision(shape, shapes, layer):
             continue
         else:
@@ -60,8 +70,9 @@ def draw_shape(bg, layer, shapes, ctx):
     
     shape.radius = new_radius
 
-    shapes.append(shape)
+    return(shape)
 
+def draw_shape(bg, layer, shape, ctx):
     draw_function = shape_list[layer.shape]['function']
 
     draw_function(shape, ctx, *layer.args)
