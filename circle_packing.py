@@ -119,4 +119,4 @@ if __name__ == '__main__':
     render_shape_layer(bg, Layer('base'), ctx)
     render_shape_layer(bg, Layer('tint'), ctx)
 
-    surface.write_to_png('outputs/stream_background.png')
+    surface.write_to_png('outputs/testing_crosses_4.png')

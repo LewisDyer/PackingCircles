@@ -12,10 +12,10 @@
     ],
     "inner_colours": {"colour": "#000000"},
     "inner_proportion": 0.65,
-    "inner": "True",
+    "inner": "False",
     "inner_hole": "True",
     "is_gradient": "True",
     "clip_walls": "False",
-    "shape": "polygon",
-    "sides": 5
+    "shape": "cross",
+    "lines": 2
 }

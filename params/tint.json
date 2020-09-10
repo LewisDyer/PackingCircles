@@ -8,6 +8,6 @@
         {"colour": "#000000",
         "opacity": 0.25}
     ],
-    "shape": "polygon",
-    "sides": 5
+    "shape": "cross",
+    "lines": 2 
 }
