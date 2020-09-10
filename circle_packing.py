@@ -44,6 +44,12 @@ class Shape:
         chosen_colour = choice(colours)
         self.r, self.g, self.b = chosen_colour.colour
         self.a = chosen_colour.opacity
+        gradient_colour = choice(colours)
+        while chosen_colour == gradient_colour and len(colours) > 1:
+            gradient_colour = choice(colours)
+        self.gr, self.gg, self.gb = gradient_colour.colour
+        self.ga = gradient_colour.opacity
+
 
 def create_shape(bg, layer, shapes, ctx):
     place_to_draw = False
@@ -81,14 +87,9 @@ def draw_shape(bg, layer, shape, ctx):
 
 
     if layer.is_gradient and len(layer.colours) > 1:
-        sc = choice(layer.colours)
-        ec = choice(layer.colours)
-        while sc == ec:
-            ec = choice(layer.colours) # enforce two different colours
-
         pattern = cairo.LinearGradient(shape.x, shape.y - shape.radius, shape.x, shape.y + shape.radius)
-        pattern.add_color_stop_rgba(0, sc.colour[0]/255, sc.colour[1]/255, sc.colour[2]/255, sc.opacity)
-        pattern.add_color_stop_rgba(1, ec.colour[0]/255, ec.colour[1]/255, ec.colour[2]/255, ec.opacity)
+        pattern.add_color_stop_rgba(0, shape.r/255, shape.g/255, shape.b/255, shape.a)
+        pattern.add_color_stop_rgba(1,shape.gr/255, shape.gg/255, shape.gb/255, shape.ga)
         ctx.set_source(pattern)
     else:
         ctx.set_source_rgba(shape.r/255, shape.g/255, shape.b/255, shape.a)

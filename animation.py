@@ -5,9 +5,9 @@ import numpy
 
 import circle_packing, handle_params
 
-NO_FRAMES = 5
+NO_FRAMES = 360
 
-gif_writer=imageio.get_writer("outputs/brb_stream.gif", mode="I")
+gif_writer=imageio.get_writer("outputs/brb_stream.gif", mode="I", fps=60)
 
 def as_numpy_array(surface):
 
@@ -41,3 +41,10 @@ for i in range(NO_FRAMES):
     add_image(gif_writer, surface)
     for shape in main_shapes:
         shape.angle = (shape.angle + (360/NO_FRAMES)) % 360
+    for shape in tint_shapes:
+        shape.angle = (shape.angle + (360/NO_FRAMES)) % 360
+
+    ctx.rectangle(0, 0, bg.width, bg.height)
+    bg_col = bg.colour.colour
+    ctx.set_source_rgb(bg_col[0], bg_col[1], bg_col[2])
+    ctx.fill()
