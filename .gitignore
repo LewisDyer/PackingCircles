@@ -1,5 +1,6 @@
 *.png
 *.json
 *.gif
+*.mp4
 __pycache__/handle_params.cpython-37.pyc
 __pycache__/shapes.cpython-37.pyc

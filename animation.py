@@ -7,7 +7,7 @@ import circle_packing, handle_params
 
 NO_FRAMES = 360
 
-gif_writer=imageio.get_writer("outputs/brb_stream.gif", mode="I", fps=60)
+gif_writer=imageio.get_writer("outputs/brb_stream.mp4", mode="I", fps=60)
 
 def as_numpy_array(surface):
 

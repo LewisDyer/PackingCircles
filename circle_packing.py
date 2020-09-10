@@ -36,14 +36,16 @@ def draw_layer(bg, layer, shapes, ctx):
         draw_shape(bg, layer, shape, ctx)
 
 class Shape:
-    def __init__(self, bg, min_radius, colours):
+    def __init__(self, bg, layer):
         self.x = uniform(0, bg.width)
         self.y = uniform(0, bg.height)
-        self.radius = min_radius
+        self.radius = layer.min_radius
         self.angle = randint(0, 359)
-        chosen_colour = choice(colours)
+
+        chosen_colour = choice(layer.colours)
         self.r, self.g, self.b = chosen_colour.colour
         self.a = chosen_colour.opacity
+
         gradient_colour = choice(colours)
         while chosen_colour == gradient_colour and len(colours) > 1:
             gradient_colour = choice(colours)
@@ -54,7 +56,7 @@ class Shape:
 def create_shape(bg, layer, shapes, ctx):
     place_to_draw = False
     for i in range(layer.max_attempts):
-        shape = Shape(bg, layer.min_radius, layer.colours)
+        shape = Shape(bg, layer)
         if check_collision(shape, shapes, layer):
             continue
         else:
