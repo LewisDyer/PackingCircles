@@ -7,7 +7,7 @@ import circle_packing, handle_params
 
 NO_FRAMES = 360
 
-gif_writer=imageio.get_writer("outputs/brb_stream.mp4", mode="I", fps=60)
+gif_writer=imageio.get_writer("outputs/playstation.mp4", mode="I", fps=60)
 
 def as_numpy_array(surface):
 
@@ -30,7 +30,7 @@ def add_image(writer, surface):
 bg = handle_params.Background('big_black')
 ctx, surface = circle_packing.render_background(bg)
 
-stream, stream_tint = handle_params.Layer('stream'), handle_params.Layer('stream_tint')
+stream, stream_tint = handle_params.Layer('nse'), handle_params.Layer('playstation_tint')
 main_shapes = circle_packing.define_layer(bg, stream, ctx)
 tint_shapes = circle_packing.define_layer(bg, stream_tint, ctx)
 

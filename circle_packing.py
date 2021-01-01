@@ -102,11 +102,11 @@ def draw_shape(bg, layer, shape, ctx):
         ctx.set_source_rgba(shape.r/255, shape.g/255, shape.b/255, shape.a)
     ctx.fill()
 
-    if layer.inner:
+    if layer.inner and shape.shape['name'] != "cross":
         ctx.move_to(shape.x+layer.inner_proportion*shape.radius, shape.y)
         old_radius = shape.radius
         shape.radius *= layer.inner_proportion
-        draw_function(shape, ctx, *layer.args)
+        draw_function(shape, ctx, *shape.args)
         shape.radius = old_radius
         tint = choice(layer.inner_colours)
         if layer.inner_hole:
@@ -136,7 +136,7 @@ if __name__ == '__main__':
     bg = Background('big_black')
     ctx, surface = render_background(bg)
 
-    render_shape_layer(bg, Layer('stream'), ctx)
-    render_shape_layer(bg, Layer('stream_tint'), ctx)
+    render_shape_layer(bg, Layer('nse'), ctx)
+    render_shape_layer(bg, Layer('playstation_tint'), ctx)
 
-    surface.write_to_png('outputs/stream_background_new.png')
+    surface.write_to_png('outputs/nse_grad.png')
